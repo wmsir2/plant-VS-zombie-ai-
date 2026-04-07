@@ -4,12 +4,12 @@
 #include "tool.h"
 
 Sunflower::Sunflower()
-    : Plant("Sunflower", 5, 0, 0), currentFrame(0) {
+    : Plant("向日葵", 300, 0, 0), currentFrame(0) {
     lastUpdateTime = std::chrono::steady_clock::now();
 }
 
 Sunflower::Sunflower(int row, int col)
-    : Plant("Sunflower", 5, row, col), currentFrame(0) {
+    : Plant("向日葵", 300, row, col), currentFrame(0) {
     lastUpdateTime = std::chrono::steady_clock::now();
 }
 

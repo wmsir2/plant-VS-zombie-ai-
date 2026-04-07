@@ -1,61 +1,116 @@
 #include <iostream>
+
 #include <graphics.h>
+
 #include <vector>
+
 #include <algorithm>
+
 #include <chrono>
+
 #include <thread>
+
 #include "GameManager.h"
+
 #include "Sunflower.h"
+
 #include "Peashooter.h"
+
 #include "config.h"
+
 #include "PlantCard.h"
+
 #include "tool.h"
 
+
+
 GameManager::GameManager(int rows, int columns) : running(false) {
+
     gameMap = std::make_unique<GameMap>(rows, columns);
+
 }
+
+
 
 GameManager::~GameManager() {
+
     for (auto zombie : zombies) delete zombie;
+
     for (auto bullet : bullets) delete bullet;
+
     for (auto sun : suns) delete sun;
+
 }
 
+
+
 void GameManager::startGame() {
-    srand(time(NULL));
+
     initgraph(WIN_WIDTH, WIN_HEIGHT, 1);
+
     loadPlantCards();
+
     loadimage(&imgBg, "res/白天.jpg");
+
     loadimage(&imgBar, "res/bar5.png");
+
     loadImages();
+
+
 
     running = true;
 
+
+
     const int TARGET_FPS = 60;
+
     const int FRAME_TIME_MS = 1000 / TARGET_FPS;
 
+
+
     while (running) {
+
         auto frameBegin = std::chrono::steady_clock::now();
+
+
+
         handleInput();
 
         updateGame();
 
         renderGame();
 
+
+
         auto frameEnd = std::chrono::steady_clock::now();
+
         auto frameDuration = std::chrono::duration_cast<std::chrono::milliseconds>(frameEnd - frameBegin).count();
 
+
+
         if (frameDuration < FRAME_TIME_MS) {
+
             std::this_thread::sleep_for(std::chrono::milliseconds(FRAME_TIME_MS - frameDuration));
+
         }
+
     }
+
 }
 
+
+
 void GameManager::handleInput() {
+
     while (MouseHit()) {
+
         MOUSEMSG msg = GetMouseMsg();
+
         mouseX = msg.x;
+
         mouseY = msg.y;
+
+
 
         if (msg.uMsg == WM_LBUTTONDOWN) {
 
@@ -103,7 +158,7 @@ void GameManager::updateGame() {
 
     sunSpawnTimer++;
 
-    if (sunSpawnTimer >= SKY_SUN_INTERVAL) {
+    if (sunSpawnTimer >= 500) {
 
         spawnSun();
 
@@ -125,13 +180,13 @@ void GameManager::updateGame() {
 
                 sunshineTimer++;
 
-                if (sunshineTimer >= SUNFLOWER_SUN_INTERVAL) {
+                if (sunshineTimer >= 600) {
 
-                    int sunX = 250 + col * 80 + FLOWER_SUN_OFFSET_X;
+                    int sunX = 250 + col * 80 + 40;
 
-                    int sunY = 100 + row * 100 + FLOWER_SUN_OFFSET_Y;
+                    int sunY = 100 + row * 100;
 
-                    suns.push_back(Sun::createFromFlower(sunX, sunY));
+                    suns.push_back(new Sun(sunX, sunY));
 
                     sunshineTimer = 0;
 
@@ -167,7 +222,7 @@ void GameManager::updateGame() {
 
     // 阳光更新
 
-    updateSuns();
+    updateSuns();`n    }
 
 }
 
@@ -349,7 +404,7 @@ void GameManager::displayPlantCards() {
 
 void GameManager::spawnZombie() {
 
-    
+    const int MAX_ZOMBIES = 20;
 
     if (zombies.size() >= MAX_ZOMBIES) return;
 
@@ -363,7 +418,7 @@ void GameManager::spawnZombie() {
 
 
 
-    zombies.push_back(new Zombie(spawnX, spawnY, 100, ZOMBIE_MOVE_SPEED));
+    zombies.push_back(new Zombie(spawnX, spawnY, 100, 0.36f));
 
 }
 
@@ -473,7 +528,7 @@ void GameManager::tryShoot() {
 
     shootTimer++;
 
-    if (shootTimer < PEASHOOTER_SHOOT_INTERVAL) return;
+    if (shootTimer < 90) return;
 
 
 
@@ -503,9 +558,9 @@ void GameManager::tryShoot() {
 
                 if (hasZombie) {
 
-                    int bulletX = 250 + col * 80 + BULLET_OFFSET_X;
+                    int bulletX = 250 + col * 80 + 60;
 
-                    int bulletY = 100 + row * 100 + BULLET_OFFSET_Y;
+                    int bulletY = 100 + row * 100 + 40;
 
                     bullets.push_back(new Bullet(bulletX, bulletY, row));
 
@@ -573,7 +628,7 @@ void GameManager::checkBulletCollisions() {
 
             int zY = zombie->getPosition().y;
 
-            if (bullet->getRow() == zombie->getRow() && bX >= zX && bX <= zX + BULLET_HIT_RANGE) {
+            if (bullet->getRow() == zombie->getRow() && bX >= zX && bX <= zX + 50) {
 
                 zombie->takeDamage(bullet->getDamage());
 
@@ -591,7 +646,19 @@ void GameManager::checkBulletCollisions() {
 
 
 
+    // 移除已飞行完成的阳光并增加阳光值
 
+        return false;
+
+    }), suns.end());
+
+}
+
+        return false;
+
+    }), suns.end());
+
+}
 
 
 
@@ -648,7 +715,7 @@ void GameManager::renderSunshineUI() {
 
     // 在游戏画面顶部栏显示阳光数量 (参考原版位置: 282, 67)
 
-    settextcolor(BLACK);
+    settextcolor(RGB(255, 255, 255));
 
     setbkmode(TRANSPARENT);
 
@@ -660,17 +727,9 @@ void GameManager::renderSunshineUI() {
 
     _stprintf_s(buf, _T("%d"), sunshine);
 
-    if (sunshine < 100) outtextxy(SUN_UI_X_SINGLE, SUN_UI_Y, buf); else outtextxy(SUN_UI_X_MULTI, SUN_UI_Y, buf);
+    outtextxy(280, 67, buf);
 
 }
-
-
-
-
-
-
-
-
 
 
 

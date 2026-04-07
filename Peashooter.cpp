@@ -4,12 +4,12 @@
 #include "tool.h"
 
 Peashooter::Peashooter()
-    : Plant("Peashooter", 6, 0, 0), currentFrame(0) {
+    : Plant("Õ„∂π…‰ ÷", 300, 0, 0), currentFrame(0) {
     lastUpdateTime = std::chrono::steady_clock::now();
 }
 
 Peashooter::Peashooter(int row, int col)
-    : Plant("Peashooter", 6, row, col), currentFrame(0) {
+    : Plant("Õ„∂π…‰ ÷", 300, row, col), currentFrame(0) {
     lastUpdateTime = std::chrono::steady_clock::now();
 }
 
@@ -20,7 +20,6 @@ void Peashooter::update() {
         currentFrame = (currentFrame + 1) % PEASHOOTER_FRAME_COUNT;
         lastUpdateTime = now;
     }
-    // TODO: π•ª˜Ω© ¨¬ﬂº≠
 }
 
 void Peashooter::draw(int x, int y) {
