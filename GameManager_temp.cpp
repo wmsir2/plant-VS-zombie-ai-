@@ -222,7 +222,7 @@ void GameManager::updateGame() {
 
     // 阳光更新
 
-    updateSuns();
+    updateSuns();`n    }
 
 }
 
@@ -646,7 +646,19 @@ void GameManager::checkBulletCollisions() {
 
 
 
+    // 移除已飞行完成的阳光并增加阳光值
 
+        return false;
+
+    }), suns.end());
+
+}
+
+        return false;
+
+    }), suns.end());
+
+}
 
 
 
@@ -718,6 +730,7 @@ void GameManager::renderSunshineUI() {
     outtextxy(280, 67, buf);
 
 }
+
 
 
 

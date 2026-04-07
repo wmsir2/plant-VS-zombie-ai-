@@ -1,5 +1,4 @@
-// GameManager.h
-#pragma once
+ï»¿#pragma once
 
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
@@ -7,45 +6,68 @@
 #include "GameMap.h"
 #include "PlantCard.h"
 #include "Zombie.h"
+#include "Bullet.h"
+#include "Sun.h"
 #include <vector>
 #include <memory>
 
 class GameManager {
 public:
-    GameManager(int rows, int columns);     // ´ø²Î¹¹Ôìº¯Êı
-    ~GameManager();                         // Îö¹¹º¯Êı
+    GameManager(int rows, int columns);
+    ~GameManager();
 
-    void startGame();           // ³õÊ¼»¯ÓÎÏ·
-    void displayPlantCards();   // ÏÔÊ¾Ö²Îï¿¨Æ¬
-    void handleInput();         // ´¦ÀíÍæ¼ÒÊäÈë
-    void processClick(int x, int y);       // ´¦ÀíÍæ¼Òµã»÷
-    void processPlanting(int x, int y);    // ´¦ÀíµØÍ¼ÇøÓòµÄÖÖÖ²
-    void buyPlant(size_t index);           // ´¦ÀíÍæ¼Ò¹ºÂòÖ²Îï
-    void updateGame();          // ¸üĞÂÓÎÏ·×´Ì¬
-    void renderGame();          // äÖÈ¾ÓÎÏ·×´Ì¬
+    void startGame();
+    void displayPlantCards();
+    void handleInput();
+    void processClick(int x, int y);
+    void processPlanting(int x, int y);
+    void buyPlant(size_t index);
+    void updateGame();
+    void renderGame();
 
 private:
-    bool running;               // ¿ØÖÆÓÎÏ·Ñ­»·
-    int mouseX = 0;            // µ±Ç°Êó±êµÄ X ×ø±ê
-    int mouseY = 0;            // µ±Ç°Êó±êµÄ Y ×ø±ê
-    bool plantSelected = false; // ÊÇ·ñÑ¡ÔñÁËÖ²Îï¿¨Æ¬
-    IMAGE selectedPlantImage;  // µ±Ç°Ñ¡ÔñµÄÖ²ÎïÍ¼Ïñ
+    bool running;
+    int mouseX = 0;
+    int mouseY = 0;
+    bool plantSelected = false;
+    IMAGE selectedPlantImage;
 
-    std::unique_ptr<GameMap> gameMap;  // ÓÎÏ·µØÍ¼
-    std::vector<PlantCard> plantCards; // Ö²Îï¿¨Æ¬
-    PlantCard* selectedCard = nullptr; // µ±Ç°Ñ¡ÔñµÄÖ²Îï¿¨Æ¬
+    // ç»æµç³»ç»Ÿ
+    int sunshine = 50;
+    int sunshineTimer = 0;
 
-    // --- ½©Ê¬Ïà¹Ø ---
-    std::vector<Zombie*> zombies;      // ½©Ê¬ÁĞ±í
-    int zombieSpawnTimer = 0;          // ½©Ê¬Éú³É¼ÆÊ±Æ÷
-    int zombieSpawnInterval = 600;     // Ã¿600Ö¡Éú³ÉÒ»¸ö½©Ê¬
+    std::unique_ptr<GameMap> gameMap;
+    std::vector<PlantCard> plantCards;
+    PlantCard* selectedCard = nullptr;
 
-    void loadPlantCards();     // ¼ÓÔØÖ²Îï¿¨Æ¬
-    void spawnZombie();        // Éú³É½©Ê¬
-    void updateZombies();      // ¸üĞÂ½©Ê¬
-    void renderZombies();      // äÖÈ¾½©Ê¬
-    void checkZombieCollisions(); // ¼ì²â½©Ê¬ÓëÖ²ÎïÅö×²
-    void cleanupDeadZombies();  // ÇåÀíËÀÍöµÄ½©Ê¬
+    // åƒµå°¸
+    std::vector<Zombie*> zombies;
+    int zombieSpawnTimer = 0;
+    int zombieSpawnInterval = 600;
+
+    // å­å¼¹
+    std::vector<Bullet*> bullets;
+    int shootTimer = 0;
+
+    // é˜³å…‰
+    std::vector<Sun*> suns;
+    int sunSpawnTimer = 0;
+
+    void loadPlantCards();
+    void spawnZombie();
+    void updateZombies();
+    void renderZombies();
+    void checkZombieCollisions();
+    void cleanupDeadZombies();
+    void updateBullets();
+    void renderBullets();
+    void checkBulletCollisions();
+    void spawnSun();
+    void updateSuns();
+    void renderSuns();
+    void checkSunClick(int x, int y);
+    void renderSunshineUI();
+    void tryShoot();
 };
 
-#endif // GAMEMANAGER_H
+#endif
