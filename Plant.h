@@ -1,4 +1,4 @@
-// Plant.h
+ï»¿// Plant.h
 #pragma once
 #include <string>
 #include <graphics.h>
@@ -8,23 +8,25 @@ protected:
     std::string name;
     int blood;
     int row, col;
-    IMAGE img; // ÓÃÓÚ´æ´¢Ö²ÎïµÄÍ¼Ïñ
+    IMAGE img; // ç”¨äºå­˜å‚¨æ¤ç‰©çš„å›¾åƒ
     int currentFrame = 0;
     std::chrono::steady_clock::time_point lastUpdateTime;
-    int frameDuration = 80; // Ã¿Ö¡³ÖĞøÊ±¼ä£¬µ¥Î»ºÁÃë
+    int frameDuration = 80; // æ¯å¸§æŒç»­æ—¶é—´ï¼Œå•ä½æ¯«ç§’
 public:
     Plant();
 
     Plant(const std::string& name, int blood, int row=0, int col=0);
 
     virtual ~Plant();
-    virtual void draw(int x, int y)  = 0; // ³éÏó·½·¨£¬»æÖÆÖ²Îï
-    virtual void update() = 0;           // ´¿Ğéº¯Êı
+    virtual void draw(int x, int y)  = 0; // æŠ½è±¡æ–¹æ³•ï¼Œç»˜åˆ¶æ¤ç‰©
+    virtual void update() = 0;           // çº¯è™šå‡½æ•°
 
     int getBlood() const;
     void takeDamage(int amount);
     std::string getName() const;
     int getRow() const;
     int getCol() const;
+    int getWidth() const; int getHeight() const;
     void setPosition(int row, int col);
 };
+

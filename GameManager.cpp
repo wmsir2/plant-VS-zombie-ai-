@@ -1,5 +1,4 @@
-﻿// GameManager.cpp
-#include <iostream>
+﻿#include <iostream>
 #include<graphics.h>
 #include <vector>
 #include <algorithm>
@@ -17,7 +16,6 @@ GameManager::GameManager(int rows, int columns) : running(false) {
 }
 
 GameManager::~GameManager() {
-    // 清理僵尸
     for (auto zombie : zombies) {
         delete zombie;
     }
@@ -25,21 +23,17 @@ GameManager::~GameManager() {
 }
 
 void GameManager::startGame() {
-    // 创建游戏窗口
     initgraph(WIN_WIDTH, WIN_HEIGHT, 1);
-    loadPlantCards();           // 加载植物卡片
+    loadPlantCards();
     loadimage(&imgBg, "res/白天.jpg");
     loadimage(&imgBar, "res/bar5.png");
-    loadImages();               // 加载所有动画图片（包括僵尸）
+    loadImages();
 
     running = true;
 
-    // 设置目标帧率为 60 FPS
     const int TARGET_FPS = 60;
-    const int FRAME_TIME_MS = 1000 / TARGET_FPS;  // 约 16.67 ms
-    auto frameStartTime = std::chrono::steady_clock::now();
+    const int FRAME_TIME_MS = 1000 / TARGET_FPS;
 
-    // 游戏主循环
     while (running) {
         auto frameBegin = std::chrono::steady_clock::now();
 
@@ -47,7 +41,6 @@ void GameManager::startGame() {
         updateGame();
         renderGame();
 
-        // 帧率控制
         auto frameEnd = std::chrono::steady_clock::now();
         auto frameDuration = std::chrono::duration_cast<std::chrono::milliseconds>(
             frameEnd - frameBegin).count();
@@ -60,14 +53,11 @@ void GameManager::startGame() {
 }
 
 void GameManager::handleInput() {
-    // 每帧都更新鼠标位置，确保植物预览跟随光标
-    MOUSEMSG msg = GetMouseMsg();
-    mouseX = msg.x;
-    mouseY = msg.y;
+    while (MouseHit()) {
+        MOUSEMSG msg = GetMouseMsg();
+        mouseX = msg.x;
+        mouseY = msg.y;
 
-    // 处理鼠标点击事件
-    if (MouseHit()) {
-        msg = GetMouseMsg();
         if (msg.uMsg == WM_LBUTTONDOWN) {
             if (plantSelected) {
                 processPlanting(msg.x, msg.y);
@@ -80,23 +70,17 @@ void GameManager::handleInput() {
 }
 
 void GameManager::updateGame() {
-    // 更新游戏地图中的植物
     gameMap->update();
 
-    // 定时生成僵尸
     zombieSpawnTimer++;
     if (zombieSpawnTimer >= zombieSpawnInterval) {
         spawnZombie();
         zombieSpawnTimer = 0;
     }
 
-    // 更新所有僵尸
     updateZombies();
-
-    // 检测僵尸与植物碰撞
     checkZombieCollisions();
-
-    // 清理死亡的僵尸
+    gameMap->removeDeadPlants();
     cleanupDeadZombies();
 }
 
@@ -107,13 +91,9 @@ void GameManager::renderGame() {
     putimage(250, 0, &imgBar);
 
     displayPlantCards();
-
-    gameMap->display();        // 渲染地图上的植物
-
-    // 绘制所有僵尸
+    gameMap->display();
     renderZombies();
 
-    // 如果选择了植物，在鼠标位置显示植物预览
     if (plantSelected) {
         putimagePNG(mouseX - 32, mouseY - 32, &selectedPlantImage);
     }
@@ -128,9 +108,9 @@ void GameManager::processClick(int x, int y) {
     int cardHeight = 90;
 
     for (size_t i = 0; i < plantCards.size(); ++i) {
-        int cardX = 338 + (int)i * cardWidth;  // 添加显式转换
+        int cardX = 338 + (int)i * cardWidth;
         if (x >= cardX && x <= cardX + cardWidth && y >= cardY && y <= cardY + cardHeight) {
-            std::cout << "点击植物卡片: " << plantCards[i].getName() << std::endl;
+            std::cout << "Click card: " << plantCards[i].getName() << std::endl;
             cardClicked = true;
             selectedCard = &plantCards[i];
             buyPlant(i);
@@ -139,7 +119,7 @@ void GameManager::processClick(int x, int y) {
             loadimage(&selectedPlantImage, plantImagePath.c_str());
 
             if (selectedPlantImage.getwidth() == 0 || selectedPlantImage.getheight() == 0) {
-                std::cout << "加载植物图像失败: " << plantImagePath << std::endl;
+                std::cout << "Load failed: " << plantImagePath << std::endl;
                 plantSelected = false;
             }
             else {
@@ -163,7 +143,7 @@ void GameManager::processPlanting(int x, int y) {
 
     if (row >= 0 && row < gameMap->getRows() && column >= 0 && column < gameMap->getColumns()) {
         if (gameMap->canPlacePlant(row, column)) {
-            std::cout << "在 (" << row << ", " << column << ") 种植 " << selectedCard->getName() << std::endl;
+            std::cout << "Plant at (" << row << ", " << column << ") " << selectedCard->getName() << std::endl;
             
             if (selectedCard->getName() == "向日葵") {
                 gameMap->placePlant(row, column, std::make_shared<Sunflower>(row, column));
@@ -175,14 +155,11 @@ void GameManager::processPlanting(int x, int y) {
             plantSelected = false;
             selectedCard = nullptr;
         }
-        else {
-            std::cout << "该位置已有植物！" << std::endl;
-        }
     }
 }
 
 void GameManager::buyPlant(size_t index) {
-    std::cout << "购买植物: " << plantCards[index].getName() << std::endl;
+    std::cout << "Buy: " << plantCards[index].getName() << std::endl;
 }
 
 void GameManager::loadPlantCards() {
@@ -192,48 +169,33 @@ void GameManager::loadPlantCards() {
 
 void GameManager::displayPlantCards() {
     int y = 5;
-
     for (size_t i = 0; i < plantCards.size(); ++i) {
-        int xPos = 338 + (int)i * 65;  // 添加显式转换
+        int xPos = 338 + (int)i * 65;
         putimagePNG(xPos, y, &plantCards[i].getImage());
     }
 }
 
-// --- 僵尸相关方法 ---
-
 void GameManager::spawnZombie() {
-    // 限制场景内僵尸数量，防止性能下降
     const int MAX_ZOMBIES = 20;
-    if (zombies.size() >= MAX_ZOMBIES) {
-        return;  // 僵尸数量达到上限，停止生成
-    }
+    if (zombies.size() >= MAX_ZOMBIES) return;
 
-    // 在右侧随机一行生成僵尸
     int row = rand() % gameMap->getRows();
-    int spawnX = WIN_WIDTH;  // 屏幕右侧
-    int spawnY = 100 + row * 100;  // 根据行数计算Y坐标
+    int spawnX = WIN_WIDTH;
+    int spawnY = 100 + row * 100;
 
-    // 速度设置：0.36f 像素/帧，在 60 FPS 下约 21.6 px/s
-    // 从屏幕右侧 (900) 到左侧 (250) 需约 30 秒
     Zombie* newZombie = new Zombie(spawnX, spawnY, 100, 0.36f);
     zombies.push_back(newZombie);
 
-    // 仅在达到特定数量时输出日志，避免过度输出
-    if (zombies.size() % 5 == 0) {
-        std::cout << "[Zombie] 僵尸数量: " << zombies.size() << std::endl;
-    }
+    std::cout << "Zombie spawned at row " << row << std::endl;
 }
 
 void GameManager::updateZombies() {
     for (auto zombie : zombies) {
         if (zombie->isDead()) continue;
-
         zombie->update();
-
-        // 限制僵尸位置不能超过屏幕左边，防止飘出屏幕
         if (zombie->getPosition().x < 0) {
             zombie->clampPosition(0);
-            std::cout << "[GAME OVER] 僵尸冲到左边了!" << std::endl;
+            std::cout << "[GAME OVER]" << std::endl;
             running = false;
             break;
         }
@@ -250,19 +212,15 @@ void GameManager::renderZombies() {
 
 void GameManager::checkZombieCollisions() {
     for (auto zombie : zombies) {
-        if (zombie->isDead() || zombie->getTargetPlant() != nullptr) {
-            continue;  // 跳过已死亡或已在啃食的僵尸
-        }
+        if (zombie->isDead() || zombie->getTargetPlant() != nullptr) continue;
 
-        // 遍历地图中的所有植物，找到第一个碰撞后立即停止
         bool foundCollision = false;
         for (int row = 0; row < gameMap->getRows() && !foundCollision; ++row) {
             for (int col = 0; col < gameMap->getColumns() && !foundCollision; ++col) {
                 auto plant = gameMap->getPlant(row, col);
-
                 if (plant != nullptr && zombie->isCollidingWith(plant.get())) {
                     zombie->startEating(plant.get());
-                    foundCollision = true;  // 找到碰撞后立即退出
+                    foundCollision = true;
                 }
             }
         }
@@ -270,24 +228,14 @@ void GameManager::checkZombieCollisions() {
 }
 
 void GameManager::cleanupDeadZombies() {
-    // 使用 erase-remove 惯用法提高效率
-    auto oldSize = zombies.size();
-
     zombies.erase(
         std::remove_if(zombies.begin(), zombies.end(),
             [](Zombie* zombie) {
                 if (zombie->isDead()) {
                     delete zombie;
-                    return true;  // 标记为移除
+                    return true;
                 }
                 return false;
             }),
-        zombies.end()
-    );
-
-    // 仅在确实清理了僵尸时输出日志
-    if (oldSize > zombies.size()) {
-        std::cout << "[Cleanup] 僵尸已清理, 剩余数量: " << zombies.size() << std::endl;
-    }
+        zombies.end());
 }
-

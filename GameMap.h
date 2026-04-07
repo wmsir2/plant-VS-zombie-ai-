@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <memory>
 #include "Plant.h"
@@ -15,7 +15,9 @@ public:
     int getRows() const { return rows; }
     int getColumns() const { return columns; }
     void placePlant(int row, int column, std::shared_ptr<Plant> plant);
-    std::shared_ptr<Plant> getPlant(int row, int column) const;  // ÐÂÔö
+    std::shared_ptr<Plant> getPlant(int row, int column) const;
+    void removePlant(int row, int column);
     void display();
     void update();
+    void removeDeadPlants();
 };

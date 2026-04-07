@@ -18,19 +18,25 @@
     <ClInclude Include="config.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="tool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="vector2.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="GameMap.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Peashooter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="Plant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PlantCard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="vector2.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Zombie.h">
@@ -39,45 +45,39 @@
     <ClInclude Include="Sunflower.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Peashooter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PlantCard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Peashooter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Plant.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PlantCard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sunflower.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="tool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="vector2.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Plant.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GameMap.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Sunflower.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Peashooter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="config.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="PlantCard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Zombie.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
