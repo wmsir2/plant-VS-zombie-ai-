@@ -363,7 +363,7 @@ void GameManager::spawnZombie() {
 
 
 
-    zombies.push_back(new Zombie(spawnX, spawnY, 100, ZOMBIE_MOVE_SPEED));
+    zombies.push_back(new Zombie(spawnX, spawnY, 100, ZOMBIE_MOVE_SPEED, row));
 
 }
 
@@ -556,37 +556,30 @@ void GameManager::renderBullets() {
 
 
 void GameManager::checkBulletCollisions() {
-
     for (auto bullet : bullets) {
-
         if (!bullet->isActive()) continue;
-
+        
         for (auto zombie : zombies) {
-
             if (zombie->isDead()) continue;
-
-            int bX = bullet->getX();
-
-            int bY = bullet->getY();
-
+            
+            // ½©Ê¬¼ì²â·¶Î§: x+80 µ½ x+110
             int zX = zombie->getPosition().x;
-
-            int zY = zombie->getPosition().y;
-
-            if (bullet->getRow() == zombie->getRow() && bX >= zX && bX <= zX + BULLET_HIT_RANGE) {
-
+            int bX = bullet->getX();
+            
+            // ÅÐ¶Ï×Óµ¯ÊÇ·ñÓë½©Ê¬Åö×²
+            if (bullet->getRow() == zombie->getRow() && bX > zX && bX < zX + 200) {
                 zombie->takeDamage(bullet->getDamage());
-
                 bullet->setInactive();
-
+                
+                if (zombie->isDead()) {
+                    // ½©Ê¬ËÀÍö£¬Í£Ö¹ÒÆ¶¯
+                    zombie->stopEating();
+                }
+                
                 break;
-
             }
-
         }
-
     }
-
 }
 
 

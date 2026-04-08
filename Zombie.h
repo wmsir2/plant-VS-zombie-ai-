@@ -4,6 +4,7 @@
 #include "graphics.h" 
 #include "vector2.h"  
 #include <chrono>
+#include "config.h"
 
 class Plant;
 
@@ -19,20 +20,21 @@ private:
     int attackPower;
     vector2 position;
     float moveSpeed;
+    int spawnRow;
+    float moveAccumulator = 0.0f;
 
     ZombieState state;
     
     int currentFrame = 0;
-    int frameCount = 22;
-    int frameDuration = 100;
+    int frameDuration = ZOMBIE_FRAME_DURATION;
     std::chrono::steady_clock::time_point lastUpdateTime;
 
     int eatingTimer = 0;
-    int eatingInterval = 1000;
+    int eatingInterval = ZOMBIE_EAT_INTERVAL;
     Plant* targetPlant = nullptr;
 
 public:
-    Zombie(int x, int y, int hp = 100, float speed = 0.5f);
+    Zombie(int x, int y, int hp = 100, float speed=ZOMBIE_MOVE_SPEED, int row=0);
     ~Zombie();
 
     void update();

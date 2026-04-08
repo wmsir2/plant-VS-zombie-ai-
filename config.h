@@ -10,6 +10,14 @@
 #define MAP_ROW  5		// 草坪行数
 #define MAP_COL	 9		// 草坪列数
 
+// 格子尺寸
+#define GRID_WIDTH	80	// 格子宽度
+#define GRID_HEIGHT	100	// 格子高度
+
+// 地图偏移
+#define MAP_OFFSET_X	250	// 地图X偏移
+#define MAP_OFFSET_Y	100	// 地图Y偏移
+
 // ============================================
 // 阳光系统配置
 // ============================================
@@ -19,8 +27,8 @@
 
 // 天空阳光生成间隔（帧数，60帧=1秒）
 #define SKY_SUN_INTERVAL	100	// 第一次生成阳光的间隔
-#define SKY_SUN_INTERVAL_MIN	300	// 后续生成间隔最小值（随机范围）
-#define SKY_SUN_INTERVAL_MAX	500	// 后续生成间隔最大值（随机范围）
+#define SKY_SUN_INTERVAL_MIN	400	// 后续生成间隔最小值（随机范围）
+#define SKY_SUN_INTERVAL_MAX	600	// 后续生成间隔最大值（随机范围）
 
 // 向日葵产阳光间隔（帧数）
 #define SUNFLOWER_SUN_INTERVAL	400	// 向日葵产生阳光的间隔
@@ -35,7 +43,20 @@
 const int MAX_ZOMBIES = 20;
 
 // 僵尸移动速度
-#define ZOMBIE_MOVE_SPEED 0.36f // 僵尸行走速度
+#define ZOMBIE_MOVE_SPEED 0.5f // 僵尸行走速度
+
+// 僵尸碰撞检测
+#define ZOMBIE_MOUTH_OFFSET	20	// 僵尸嘴部相对于图片左边的偏移
+#define ZOMBIE_COLLISION_OFFSET	-20	// 
+#define ZOMBIE_WIDTH	170	// 僵尸图片宽度
+// 僵尸碰撞检测偏移（正值增大检测范围）
+#define ZOMBIE_EAT_INTERVAL	1000	// 僵尸吃植物伤害间隔（毫秒）
+
+// 僵尸动画帧数
+#define ZOMBIE_SPAWN_Y_OFFSET	-60	// 僵尸生成Y坐标偏移（负值向上）
+#define ZOMBIE_WALK_FRAMES	22	// 行走动画帧数
+#define ZOMBIE_EAT_FRAMES	21	// 吃植物动画帧数
+#define ZOMBIE_FRAME_DURATION	100	// 动画帧时长（毫秒）
 
 // ============================================
 // 子弹系统配置
@@ -100,7 +121,6 @@ extern IMAGE imgPeashooterFrames[PEASHOOTER_FRAME_COUNT]; // 豌豆射手动画帧
 // ============================================
 bool fileExists(const std::string& filename);		// 判断文件是否存在
 void loadImages();									// 加载植物摇摆动画图片
-
 
 
 

@@ -1,12 +1,14 @@
 ﻿#include<iostream>
 #include "GameMap.h"
 #include "Plant.h"
+#include "config.h"
 
 GameMap::GameMap(int rows, int columns) : rows(rows), columns(columns) {
     map.resize(rows, std::vector<std::shared_ptr<Plant>>(columns, nullptr));
 }
 
 bool GameMap::canPlacePlant(int row, int column) const {
+    if (row < 0 || row >= rows || column < 0 || column >= columns) return false;
     return map[row][column] == nullptr;
 }
 
@@ -51,20 +53,14 @@ void GameMap::update() {
 }
 
 void GameMap::display() {
-    int gridWidth = 80;
-    int gridHeight = 100;
-    int offsetX = 250;
-    int offsetY = 100;
-    int plantOffsetX = 8;
-    int plantOffsetY = -25;
-
     for (int row = 0; row < rows; ++row) {
         for (int col = 0; col < columns; ++col) {
             if (map[row][col] != nullptr) {
-                int x = offsetX + col * gridWidth + plantOffsetX;
-                int y = offsetY + row * gridHeight + plantOffsetY;
+                int x = MAP_OFFSET_X + col * GRID_WIDTH + 8;
+                int y = MAP_OFFSET_Y + row * GRID_HEIGHT - 25;
                 map[row][col]->draw(x, y);
             }
         }
     }
 }
+

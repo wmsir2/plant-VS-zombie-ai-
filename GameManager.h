@@ -1,4 +1,5 @@
-#pragma once
+Ôªø#pragma once
+#include "config.h"
 
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
@@ -32,7 +33,7 @@ private:
     bool plantSelected = false;
     IMAGE selectedPlantImage;
 
-    // æ≠º√œµÕ≥
+    // ÁªèÊµéÁ≥ªÁªü
     int sunshine = 50;
     int sunshineTimer = 0;
 
@@ -40,16 +41,16 @@ private:
     std::vector<PlantCard> plantCards;
     PlantCard* selectedCard = nullptr;
 
-    // Ω© ¨
+    // ÂÉµÂ∞∏
     std::vector<Zombie*> zombies;
     int zombieSpawnTimer = 0;
     int zombieSpawnInterval = ZOMBIE_SPAWN_INTERVAL;
 
-    // ◊”µØ
+    // Â≠êÂºπ
     std::vector<Bullet*> bullets;
     int shootTimer = 0;
 
-    // —Ùπ‚
+    // Èò≥ÂÖâ
     std::vector<Sun*> suns;
     int sunSpawnTimer = 0;
     int sunSpawnInterval = SKY_SUN_INTERVAL;

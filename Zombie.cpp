@@ -5,8 +5,8 @@
 #include <iostream>
 #include <chrono>
 
-Zombie::Zombie(int x, int y, int hp, float speed)
-    : blood(hp), moveSpeed(speed), position(x, y),
+Zombie::Zombie(int x, int y, int hp, float speed, int row)
+    : blood(hp), moveSpeed(speed), position(x, y), spawnRow(row),
     attackPower(10), state(ZombieState::WALKING),
     currentFrame(0), frameDuration(100) {
     lastUpdateTime = std::chrono::steady_clock::now();
@@ -81,24 +81,27 @@ void Zombie::stopEating() {
 }
 
 int Zombie::getRow() const {
-    int zombieHeight = imgZM[0].getheight();
-    int gridHeight = 100;
-    int drawY = position.y - (zombieHeight - gridHeight) / 2 - 10;
-    return (drawY - 100 + gridHeight / 2) / gridHeight;
+    return spawnRow;
 }
 
 bool Zombie::isCollidingWith(Plant* plant) const {
     if (plant == nullptr) return false;
     if (getRow() != plant->getRow()) return false;
 
-    int gridWidth = 80;
-    int offsetX = 250;
-    int plantGridLeft = offsetX + plant->getCol() * gridWidth;
-    int plantGridRight = plantGridLeft + gridWidth;
-    int zombieWidth = imgZM[0].getwidth();
-    int zombieMouthX = position.x + zombieWidth - 20;
-    bool xCollide = (zombieMouthX >= plantGridLeft) && (zombieMouthX <= plantGridRight);
-    return xCollide;
+    int gridWidth = GRID_WIDTH;
+    int offsetX = MAP_OFFSET_X;
+    
+    // 植物格子位置
+    int plantX = offsetX + plant->getCol() * gridWidth;
+    int x1 = plantX + 10;  // 植物左边界
+    int x2 = plantX + 60;  // 植物右边界
+    int x3 = position.x + 80;  // 僵尸前缘(右手边)
+
+    // 判断僵尸是否与植物发生碰撞
+    if (x3 > x1 && x3 < x2) {
+        return true;
+    }
+    return false;
 }
 
 void Zombie::loadResources() {}
